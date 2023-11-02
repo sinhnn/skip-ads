@@ -3,29 +3,29 @@
 let ogVolume = 1;
 let pbRate = 1;
 
-function skipAdsOnSelectors(selectors, callback)
-{
-    selectors.map(selector => { Array.from(document.body.querySelectorAll(selector)).forEach(item => callback(item));});
+function skipAdsOnSelectors(selectors, callback) {
+    selectors.map(selector => { Array.from(document.body.querySelectorAll(selector)).forEach(item => callback(item)); });
 }
 
 
-function skipAdsOnSelectorFunc(selectorFunc, callback)
-{
-    selectorFunc().map(selector => { Array.from(document.body.querySelectorAll(selector)).forEach(item => callback(item));});
+function skipAdsOnSelectorFunc(selectorFunc, callback) {
+    selectorFunc().map(selector => { Array.from(document.body.querySelectorAll(selector)).forEach(item => callback(item)); });
 }
 
-function skipAds ()
-{
+function skipAds() {
     let ad = document.getElementsByClassName("video-ads ytp-ad-module")[0];
     let vid = document.getElementsByClassName("video-stream html5-main-video")[0];
 
-    if (ad == undefined) { pbRate = vid.playbackRate; }
-
+    if (ad === undefined && vid && vid.playbackRate) { pbRate = vid.playbackRate; }
     const closeBtnSelectors = [
         '[class*="ytp-ad-overlay-close-button"]',
         '[class*="ytp-ad-text ytp-ad-skip-button-text"]',
+        // '[class*="yt-spec-button-shape-next yt-spec-button-shape-next--text yt-spec-button-shape-next--call-to-action"]', /* leads to https://www.google.com/get/videoqualityreport/?v=eZEczfSAjVQ */
     ];
-    skipAdsOnSelectors(closeBtnSelectors, (item) => item.click());
+    skipAdsOnSelectors(closeBtnSelectors, (item) => {
+        console.log("Clicking on", item);
+        item.click()
+    });
 
     const sideAdSelectors = [
         '[class*="style-scope ytd-watch-next-secondary-results-renderer sparkles-light-cta GoogleActiveViewElement"]',
@@ -33,7 +33,7 @@ function skipAds ()
         '[class*="ytp-ad-message-container"]',
     ];
     skipAdsOnSelectors(sideAdSelectors, (item) => item.style.display = "none");
-    
+
     const removeSelectors = [
         '[class*="style-scope ytd-companion-slot-renderer"]'
     ];
@@ -52,7 +52,7 @@ function skipAds ()
 /* TODO: execute skip after navigation event */
 let isBusy = false;
 const m_skipAdsInterval = setInterval(() => {
-    if (isBusy ) return;
+    if (isBusy) return;
     isBusy = true;
     skipAds();
     isBusy = false;
