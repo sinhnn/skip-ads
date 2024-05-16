@@ -1,7 +1,7 @@
 {
     "name": "Simple Skip Ads",
     "version": "1.0",
-    "description": "Description",
+    "description": "Simple Ads Skipper",
     "manifest_version": 3,
     "author": "SinhNN",
     "icons": {
@@ -15,6 +15,10 @@
             "js": ["js/index.js"]
         }
     ],
-    "permissions": ["activeTab", "storage", "tabs", "scripting"],
+    "background": {
+        "service_worker": "js/worker.js",
+        "type": "module"
+    },
+    "permissions": ["activeTab", "storage", "tabs", "scripting", "nativeMessaging"],
     "host_permissions": ["*://*.youtube.com/*"]
 }
