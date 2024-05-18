@@ -93,8 +93,11 @@ const actions = [
             return item.tagName.toLowerCase() === "yt-confirm-dialog-renderer";
         }, 
         (item) => {
-            traverser.setAttribute(item, 'skip', true);
-            item.querySelector('button[aria-label="Yes"]').click();
+            const rect = item.getBoundingClientRect();
+            if(rect.width > 0 && rect.height > 0) {
+                traverser.setAttribute(item, 'skip', true);
+                item.querySelector('button[aria-label="Yes"]').click();
+            }
         },
         "ClickOnVideoPaused"
     ),
